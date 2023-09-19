@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
 public class Ex14a {
 
     public static void main(String[] args) throws IOException {
-        File file = new File("/home/diogofalcao/Desktop/CBD/P/Lab01/names.txt");
+        File file = new File("P/Lab01/names.txt");
         Scanner sc = new Scanner(System.in);
         Jedis jedis = new Jedis();
         FileWriter myWriter = new FileWriter("CBD-14a-out.txt");
