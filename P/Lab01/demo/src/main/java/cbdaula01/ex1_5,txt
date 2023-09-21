@@ -1,0 +1,18 @@
+!! reformular printing do ex.4
+
+username
+ṕroduto_name
+
+server: num_max_pedidos e unidade_temp
+
+
+pessoa -> server através de getProduto(username, productname)
+
+? contar pedidos do username, nos ultimos unidade_tempo
+if > num_max_pedidos:
+    cancela o pedido
+else:
+    regista o pedido
+
+
+usar o timestamp

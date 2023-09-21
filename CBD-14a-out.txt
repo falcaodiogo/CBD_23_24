@@ -1,18 +1,6 @@
-Search for (Press Enter to quit): DIo
-Search for (Press Enter to quit): dio
-dion
-dione
-dionis
-dionne
-Search for (Press Enter to quit): hanna
-hanna
-hannah
-Search for (Press Enter to quit): mat
-matelda
-mathilda
-mathilde
-matilda
-matilde
-matti
-mattie
-matty
+Search for (Press Enter to quit): o
+Search for (Press Enter to quit): an
+Search for (Press Enter to quit): anto
+Search for (Press Enter to quit): ma
+Search for (Press Enter to quit): mar
+Search for (Press Enter to quit): maria
