@@ -37,7 +37,10 @@ public class Ex14a {
                     count++;
                 }
 
-                System.out.println(jedis.zrangeByLex(USERS, "[" + name, "(" + name + "~"));
+                for (String str: jedis.zrangeByLex(USERS, "[" + name, "(" + name + "~")) {
+                    System.out.println(str);
+                    myWriter.write(str + "\n");
+                }
     
                 // jedis.flushAll();
     
