@@ -1,5 +1,4 @@
-Search for (Press Enter to quit): di
-di
+Search for (Press Enter to quit): dia
 diahann
 dian
 diana
@@ -11,22 +10,7 @@ diann
 dianna
 dianne
 diannne
-didi
-dido
-diena
-dierdre
-dina
-dinah
-dinnie
-dinny
-dion
-dione
-dionis
-dionne
-dita
-dix
-dixie
-Search for (Press Enter to quit): joa
+Search for (Press Enter to quit): joan
 joan
 joana
 joane
@@ -35,6 +19,12 @@ joann
 joanna
 joanne
 joannes
-Search for (Press Enter to quit): matil
+Search for (Press Enter to quit): mat
+matelda
+mathilda
+mathilde
 matilda
 matilde
+matti
+mattie
+matty

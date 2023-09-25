@@ -20,7 +20,7 @@ ____________________________________________________________________________
 
 # ficheiros para entregar:
 
--> CBD-11-108712.txt ✅
+-> CBD-11-108712.txt ✅ (aumentar, se possível)
 -> CBD-12.batch.txt ✅
 -> CBD-12.txt ✅
 -> ficheiros .java dos 2 exercícios do (4) ✅ 1/2
