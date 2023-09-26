@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.ZParams;
+import redis.clients.jedis.resps.Tuple;
 
 public class Ex14b {
 
@@ -46,7 +47,7 @@ public class Ex14b {
                 name = name.toLowerCase();              
                 myWriter.write("Pesquisar por (Pressione Enter para sair): " + name + "\n");
 
-                // jedis.zrange(USERS, 0, -1);
+                jedis.del(USERS_2);
 
                 for (String s: jedis.zrangeByLex(USERS, "[" + name, "(" + name + "~")) {
                     jedis.zadd(USERS_2, jedis.zrem(USERS, s), s);
@@ -55,13 +56,16 @@ public class Ex14b {
 
                 ZParams params = new ZParams().weights(0, 1);
                 jedis.zinterstore(RESULT, params, USERS_2, USERS_RANKED);
-                
-                List<String> resultSet = jedis.zrevrange(RESULT, 0, -1);
 
-                for (String str : resultSet) {
-                    // Faça algo com cada elemento da resultSet
-                    System.out.println(str + ", rank: " + jedis.zrem(RESULT, str));
+            
+                List<Tuple> resultSet = jedis.zrangeWithScores(RESULT, 0, -1);
+                for (Tuple tuple : resultSet) {
+                    String name2 = tuple.getElement();
+                    double number = tuple.getScore();
+                    System.out.println(name2 + ", rank: " + number);
+                    myWriter.write(name2 + ", rank: " + number + "\n");
                 }
+
 
             }
         } catch (FileNotFoundException e) {
