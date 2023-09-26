@@ -1,7 +1,7 @@
 username
 ṕroduto_name
 
-server: num_max_pedidos e unidade_temp
+server: num_max_pedidos e unidade_temp - set
 
 
 pessoa -> server através de getProduto(username, productname)
