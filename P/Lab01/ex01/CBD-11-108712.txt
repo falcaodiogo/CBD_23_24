@@ -1,8 +1,3 @@
-ls
-ASKING
-help
-help <ASKING>
-help <SKING
 help ASKING
 RPUSH CBD 5 
 LRANGE
@@ -10,3 +5,8 @@ LRANGE CBD
 LRANGE CBD 0 3
 LINDEX CBD 0
 RPUSH PDS 9
+SET mykey "Hello, Redis!" 
+GET mykey
+HSET myhash field1 "Value1"
+HSET myhash field2 "Value2" 
+HGET myhash field1 

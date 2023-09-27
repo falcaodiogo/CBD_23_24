@@ -1,11 +1,12 @@
 5
 5
 5
-5
 4
-0
-0
+1
+1
 John Doe
 john@example.com
 OK
 7
+HGETALL user:1
+HVALS user:1
