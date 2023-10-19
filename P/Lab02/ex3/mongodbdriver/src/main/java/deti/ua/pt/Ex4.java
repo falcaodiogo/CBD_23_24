@@ -1,7 +1,10 @@
 package deti.ua.pt;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -31,30 +34,58 @@ public class Ex4 {
         // Acessar a coleção "restaurantes"
         collection = database.getCollection("restaurants");
 
-        
+        System.out.println(countLocalidades());
+
+        System.out.println(countRestByLocalidade());
+
+        getRestWithNameCloserTo("Park").forEach(System.out::println);
         
     }
 
     // Numero de localidades distintas
-    public int countLocalidades() {
-        
-        Bson filter5 = Filters.ne(null, null);
-        FindIterable<Document> documents5 = collection.find(filter5);
+    public static int countLocalidades() {
 
-        MongoCursor<Document> cursor5 = documents5.iterator();
-        while (cursor5.hasNext()) {
-            System.out.println(cursor5.next() + "\n");
+        int contador = 0;
+
+        for (String d: collection.distinct("localidade", String.class)) {
+            contador+=1;
         }
 
-        return 0;
+        return contador;
+        
     }
 
-    public Map<String, Integer> countRestByLocalidade() {
-        return null;
+    public static Map<String, Integer> countRestByLocalidade() {
+        Map<String, Integer> count = new HashMap<>();
+
+        for (String d: collection.distinct("localidade", String.class)) {
+            Bson filter1 = Filters.eq("localidade", d);
+            FindIterable<Document> documents = collection.find(filter1);
+            int contador = 0;
+            MongoCursor<Document> cursor = documents.iterator();
+            while (cursor.hasNext()) {
+                contador+=1;
+                cursor.next();
+            }
+            count.put(d, contador);
+        }
+
+        return count;
     }
 
-    public List<String> getRestWithNameCloserTo(String name) {
-        return null;
+    public static List<String> getRestWithNameCloserTo(String name) {
+        List<String> names = new ArrayList<>();
+
+        Bson filter = Filters.regex("nome", Pattern.compile(Pattern.quote(name), Pattern.CASE_INSENSITIVE));
+        // Bson projection = Projections.fields(Projections.include("nome"));
+        FindIterable<Document> documents = collection.find(filter);
+
+        MongoCursor<Document> cursor = documents.iterator();
+        while (cursor.hasNext()) {
+            names.add(cursor.next().toJson());
+        }
+
+        return names;
     }
     
 }

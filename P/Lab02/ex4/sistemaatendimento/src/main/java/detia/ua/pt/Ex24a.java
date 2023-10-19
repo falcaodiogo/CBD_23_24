@@ -1,22 +1,33 @@
-package ua.deti.pt;
+package detia.ua.pt;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Scanner;
-import redis.clients.jedis.Jedis;
 
+import org.bson.Document;
 
-public class Ex15a {
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import java.util.*;
+
+public class Ex24a {
 
     public static int LIMIT_PRODUCT = 4; // limite de produtos iguais
     public static int TIME_SLOT = 20 * 1000; // em milissegundos (20 segundos)
 
-    public static void main(String[] args) throws IOException {
-        Jedis jedis = new Jedis();
+    public static void main(String[] args) throws IOException {// Configurar a conexão com o MongoDB
+        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+
+        // Acessar a base de dados
+        MongoDatabase database = mongoClient.getDatabase("cbdex4");
+
         Scanner sc = new Scanner(System.in);
-        FileWriter myWriter = new FileWriter("CBD-15a-out.txt");
+        FileWriter myWriter = new FileWriter("CBD-24a-out.txt");
         Timestamp currentTimestamp;
         String user, product;
 
@@ -34,17 +45,17 @@ public class Ex15a {
             currentTimestamp = new Timestamp(System.currentTimeMillis());
 
             // verfificar se o user existe
-            if (!jedis.exists(user)) {
-                // se não, dar boas-vindas e introduzir normalmente no hash
-                System.out.print("**Welcome, " + user + "!**");
-                jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
-                System.out.println(" - " + product + " added.\n");
-                myWriter.write("**Welcome, " + user + "!**" + " - " + product + " added.\n\n");
-                
-            } else {
-                /*  caso o user já exista, percorrer os keys, values.
-                        se o tempo estiver dentro do time slot, conta até chegar ao limite de produtos/tempo 
-                        se o tempo estiver fora do time slot, não deixa introduzir mais até o intervalo de tempo for reposto */
+            boolean userExists = false;
+            for (String collectionName : database.listCollectionNames()) {
+                if (collectionName.equals(user)) {
+                    userExists = true;
+                    break;
+                }
+            }
+
+            if (userExists) {
+                // Acessar a coleção "restaurantes"
+                MongoCollection<Document> collection = database.getCollection(user);
                 Map<String, String> existingProducts = jedis.hgetAll(user);
 
                 int count = 0;
@@ -59,28 +70,33 @@ public class Ex15a {
                     System.out.println("!!! No more product of type " + product + " allowed. !!!\n");
                     myWriter.write("!!! No more product of type " + product + " allowed. !!!\n\n");
                 } else {
-                    jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
+                    // jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
                     System.out.println(" - " + product + " added.\n");
                     myWriter.write(" - " + product + " added.\n\n");
                 }
+            } else {
+                // se não, dar boas-vindas e introduzir normalmente no hash
+                System.out.print("**Welcome, " + user + "!**");
+                // jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
+                System.out.println(" - " + product + " added.\n");
+                myWriter.write("**Welcome, " + user + "!**" + " - " + product + " added.\n\n");
             }
 
             System.out.println("--------------------");
             System.out.println(user + "'s inventary:" );
             myWriter.write("--------------------\n");
             myWriter.write(user + "'s inventary:\n" );
-            for (String key: jedis.hvals(user)) {
-                System.out.println(key);
-                myWriter.write(key.toString() + "\n");
-            }
+            // for (String key: jedis.hvals(user)) {
+            //     System.out.println(key);
+            //     myWriter.write(key.toString() + "\n");
+            // }
             System.out.println("--------------------");
             myWriter.write("--------------------\n");
         }
 
-        jedis.flushAll();
         sc.close();
-        jedis.close();
         myWriter.close();
     }
 }
+
 
