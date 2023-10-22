@@ -15,31 +15,34 @@ import org.bson.Document;
 import java.util.Arrays;
 import java.util.List;
 
-public class Ex24a {
+public class Ex24b {
 
-    public static int LIMIT_PRODUCT = 4; // limite de produtos iguais
+    public static int LIMIT_UNITS = 10; // limite total de unidades de produto permitidas
     public static int TIME_SLOT = 20 * 1000; // em milissegundos (20 segundos)
 
     public static void main(String[] args) throws IOException {
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
         MongoDatabase database = mongoClient.getDatabase("cbdex4");
-        MongoCollection<Document> existingProducts = database.getCollection("cbd");
+        MongoCollection<Document> existingProducts = database.getCollection("cbd2");
 
         Scanner sc = new Scanner(System.in);
-        FileWriter myWriter = new FileWriter("CBD_L204a-out_108712.txt");
+        FileWriter myWriter = new FileWriter("CBD_L204b-out_108712.txt");
         Timestamp currentTimestamp;
         String user, product;
+        int quantity;
 
         while (true) {
-            System.out.println("Input 'user product': ");
+            System.out.println("Input 'user product quantity': ");
             String input = sc.nextLine();
             if (input.isEmpty()) {
                 break;
             }
 
-            myWriter.write("Input 'user product': " + input + "\n");
-            user = input.split(" ")[0];
-            product = input.split(" ")[1];
+            myWriter.write("Input 'user product quantity': " + input + "\n");
+            String[] inputParts = input.split(" ");
+            user = inputParts[0];
+            product = inputParts[1];
+            quantity = Integer.parseInt(inputParts[2]);
 
             currentTimestamp = new Timestamp(System.currentTimeMillis());
 
@@ -47,32 +50,32 @@ public class Ex24a {
             boolean userExists = existingProducts.find(Filters.eq("_id", user)).first() != null;
 
             if (userExists) {
-                int count = 0;
+                int totalUnits = 0;
                 List<Document> products = existingProducts.find(Filters.eq("_id", user)).first().getList("products", Document.class);
                 for (Document productDoc : products) {
                     long timestamp = productDoc.getLong("timestamp");
                     if (currentTimestamp.getTime() - timestamp <= TIME_SLOT) {
-                        count++;
+                        totalUnits += productDoc.getInteger("quantity");
                     }
                 }
 
-                if (count > LIMIT_PRODUCT) {
-                    System.out.println("!!! No more product of type " + product + " allowed. !!!\n");
-                    myWriter.write("!!! No more product of type " + product + " allowed. !!!\n\n");
+                if (totalUnits + quantity > LIMIT_UNITS) {
+                    System.out.println("!!! No more units of type " + product + " allowed. !!!\n");
+                    myWriter.write("!!! No more units of type " + product + " allowed. !!!\n\n");
                 } else {
-                    // Add the product to the user's document
-                    existingProducts.updateOne(Filters.eq("_id", user), new Document("$push", new Document("products", new Document("timestamp", currentTimestamp.getTime()).append("name", product))));
-                    System.out.println(" - " + product + " added.\n");
-                    myWriter.write(" - " + product + " added.\n\n");
+                    // Add the product with quantity to the user's document
+                    existingProducts.updateOne(Filters.eq("_id", user), new Document("$push", new Document("products", new Document("timestamp", currentTimestamp.getTime()).append("name", product).append("quantity", quantity))));
+                    System.out.println(" - " + quantity + " units of " + product + " added.\n");
+                    myWriter.write(" - " + quantity + " units of " + product + " added.\n\n");
                 }
             } else {
-                // If not, welcome the user and add the product
+                // If not, welcome the user and add the product with quantity
                 System.out.print("**Welcome, " + user + "!**");
                 Document newUserDocument = new Document("_id", user)
-                        .append("products", Arrays.asList(new Document("timestamp", currentTimestamp.getTime()).append("name", product)));
+                        .append("products", Arrays.asList(new Document("timestamp", currentTimestamp.getTime()).append("name", product).append("quantity", quantity)));
                 existingProducts.insertOne(newUserDocument);
-                System.out.println(" - " + product + " added.\n");
-                myWriter.write("**Welcome, " + user + "!**" + " - " + product + " added.\n\n");
+                System.out.println(" - " + quantity + " units of " + product + " added.\n");
+                myWriter.write("**Welcome, " + user + "!**" + " - " + quantity + " units of " + product + " added.\n\n");
             }
 
             System.out.println("--------------------");
@@ -84,8 +87,9 @@ public class Ex24a {
                 List<Document> userProducts = userDoc.getList("products", Document.class);
                 for (Document userProduct : userProducts) {
                     String productName = userProduct.getString("name");
-                    System.out.println(productName);
-                    myWriter.write(productName + "\n");
+                    int productQuantity = userProduct.getInteger("quantity");
+                    System.out.println(productName + " - " + productQuantity + " units");
+                    myWriter.write(productName + " - " + productQuantity + " units\n");
                 }
             }
             System.out.println("--------------------");
@@ -96,3 +100,4 @@ public class Ex24a {
         myWriter.close();
     }
 }
+
