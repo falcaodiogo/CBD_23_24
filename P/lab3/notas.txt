@@ -1,0 +1,4 @@
+// Create Keyspace
+
+CREATE KEYSPACE “KeySpace Name”
+WITH replication = {'class': ‘Strategy name’, 'replication_factor' : ‘No.Of   replicas’};

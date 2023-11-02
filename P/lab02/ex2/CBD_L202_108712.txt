@@ -1,0 +1,562 @@
+NMEC: 108712
+
+// 1. Liste todos os documentos da coleção. 
+b.restaurants.countDocuments()
+// {
+//   _id: ObjectId("65154405bcf8bb27b134a13d"),
+//   address: {
+//     building: '1839',
+//     coord: [ -73.9482609, 40.6408271 ],
+//     rua: 'Nostrand Avenue',
+//     zipcode: '11226'
+//   },
+//   localidade: 'Brooklyn',
+//   gastronomia: 'Ice Cream, Gelato, Yogurt, Ices',
+//   grades: [
+//     {
+//       date: ISODate("2014-07-14T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 12
+//     },
+//     {
+//       date: ISODate("2013-07-10T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 8
+//     },
+//     {
+//       date: ISODate("2012-07-11T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 5
+//     },
+//     {
+//       date: ISODate("2012-02-23T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 8
+//     }
+//   ],
+//   nome: 'Taste The Tropics Ice Cream',
+//   restaurant_id: '40356731'
+// }
+// 3772 resultados semelhantes
+
+
+// 2. Apresente os campos restaurant_id, nome, localidade e gastronomia para todos os 
+// documentos da coleção. 
+db.restaurants.find( {}, {restaurant_id: 1, nome: 1, localidade: 1, gastronomia: 1})
+// {
+//   address: { zipcode: '11226' },
+//   localidade: 'Brooklyn',
+//   nome: 'Taste The Tropics Ice Cream',
+//   restaurant_id: '40356731'
+// }
+// 3772 resultados semelhantes
+
+
+// 3. Apresente os campos restaurant_id, nome, localidade e código postal (zipcode), mas 
+// exclua o campo _id de todos os documentos da coleção. 
+db.restaurants.find({}, { _id: 0, restaurant_id: 1, nome: 1, localidade: 1, address: {zipcode: 1}})
+// {
+//   _id: ObjectId("65154405bcf8bb27b134a13d"),
+//   address: { zipcode: '11226' },
+//   localidade: 'Brooklyn',
+//   nome: 'Taste The Tropics Ice Cream',
+//   restaurant_id: '40356731'
+// }
+// 3772 resultados semelhantes
+
+
+// 4. Indique o total de restaurantes localizados no Bronx. 
+db.restaurants.find({localidade: "Bronx"}).count()
+// 309 resultados semelhantes
+
+
+// 5. Apresente os primeiros 15 restaurantes localizados no Bronx, ordenados por 
+// ordem crescente de nome. 
+db.restaurants.find({ localidade: "Bronx"}).sort({name: 1}).limit(15)
+// {
+//   _id: ObjectId("65154405bcf8bb27b134a1ff"),
+//   address: {
+//     building: '2300',
+//     coord: [ -73.8786113, 40.8502883 ],
+//     rua: 'Southern Boulevard',
+//     zipcode: '10460'
+//   },
+//   localidade: 'Bronx',
+//   gastronomia: 'Café/Coffee/Tea',
+//   grades: [
+//     {
+//       date: ISODate("2014-05-21T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 8
+//     },
+//     {
+//       date: ISODate("2013-05-29T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 9
+//     },
+//     {
+//       date: ISODate("2012-06-18T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 8
+//     }
+//   ],
+//   nome: 'Terrace Cafe',
+//   restaurant_id: '40368018'
+// }
+// Como de esperar, 15 resultados semelhantes
+
+
+// 6. Liste todos os restaurantes que tenham pelo menos um score superior a 85. 
+db.restaurants.find({"grades.score": {$gte: 85}})
+// {
+//   _id: ObjectId("65154405bcf8bb27b134acf4"),
+//   address: {
+//     building: '',
+//     coord: [ -74.0163793, 40.7167671 ],
+//     rua: 'Hudson River',
+//     zipcode: '10282'
+//   },
+//   localidade: 'Manhattan',
+//   gastronomia: 'American',
+//   grades: [
+//     {
+//       date: ISODate("2014-06-27T00:00:00.000Z"),
+//       grade: 'C',
+//       score: 89
+//     },
+//     {
+//       date: ISODate("2013-06-06T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 6
+//     },
+//     {
+//       date: ISODate("2012-06-19T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 13
+//     }
+//   ],
+//   nome: 'West 79Th Street Boat Basin Cafe',
+//   restaurant_id: '40756344'
+// }
+// 4 resultados semelhantes
+
+
+// 7. Encontre os restaurantes que obtiveram uma ou mais pontuações (score) entre 
+// [80 e 100]. 
+db.restaurants.find({"grades.score": {$gte:80, $lte:100}})
+// {
+//   _id: ObjectId("65154405bcf8bb27b134acf4"),
+//   address: {
+//     building: '',
+//     coord: [ -74.0163793, 40.7167671 ],
+//     rua: 'Hudson River',
+//     zipcode: '10282'
+//   },
+//   localidade: 'Manhattan',
+//   gastronomia: 'American',
+//   grades: [
+//     {
+//       date: ISODate("2014-06-27T00:00:00.000Z"),
+//       grade: 'C',
+//       score: 89
+//     },
+//     {
+//       date: ISODate("2013-06-06T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 6
+//     },
+//     {
+//       date: ISODate("2012-06-19T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 13
+//     }
+//   ],
+//   nome: 'West 79Th Street Boat Basin Cafe',
+//   restaurant_id: '40756344'
+// }
+// 5 resultados semelhantes
+
+
+// 8. Indique os restaurantes com latitude inferior a -95,7. 
+db.restaurants.find({"address.coord.0": {$lt: -95.7}})
+// Atendendo a que coord: [ latitude, longitude ]
+// {
+//   _id: ObjectId("65154405bcf8bb27b134af82"),
+//   address: {
+//     building: '60',
+//     coord: [ -111.9975205, 42.0970258 ],
+//     rua: 'West Side Highway',
+//     zipcode: '10006'
+//   },
+//   localidade: 'Manhattan',
+//   gastronomia: 'Japanese',
+//   grades: [
+//     {
+//       date: ISODate("2014-03-20T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 9
+//     },
+//     {
+//       date: ISODate("2013-06-28T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 11
+//     },
+//     {
+//       date: ISODate("2012-07-05T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 13
+//     },
+//     {
+//       date: ISODate("2011-07-27T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 2
+//     }
+//   ],
+//   nome: 'Sports Center At Chelsea Piers (Sushi Bar)',
+//   restaurant_id: '40882356'
+// }
+// 3 resultados semelhantes
+
+
+// 9. Indique os restaurantes que não têm gastronomia "American", tiveram uma (ou 
+// mais) pontuação superior a 70 e estão numa latitude inferior a -65. 
+db.restaurants.find({gastronomia: { $ne: "American"} })
+// {
+//   _id: ObjectId("65154405bcf8bb27b134a147"),
+//   address: {
+//     building: '103-05',
+//     coord: [ -73.8642349, 40.75356 ],
+//     rua: '37 Avenue',
+//     zipcode: '11368'
+//   },
+//   localidade: 'Queens',
+//   gastronomia: 'Chinese',
+//   grades: [
+//     {
+//       date: ISODate("2014-04-21T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 10
+//     },
+//     {
+//       date: ISODate("2013-11-12T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 5
+//     },
+//     {
+//       date: ISODate("2013-06-04T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 12
+//     },
+//     {
+//       date: ISODate("2012-11-14T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 10
+//     },
+//     {
+//       date: ISODate("2012-10-11T00:00:00.000Z"),
+//       grade: 'P',
+//       score: 0
+//     },
+//     {
+//       date: ISODate("2012-05-24T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 13
+//     },
+//     {
+//       date: ISODate("2011-12-08T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 12
+//     },
+//     {
+//       date: ISODate("2011-07-20T00:00:00.000Z"),
+//       grade: 'A',
+//       score: 11
+//     }
+//   ],
+//   nome: 'Ho Mei Restaurant',
+//   restaurant_id: '40362432'
+// }
+// 2517 resultados semelhantes
+
+
+// 10. Liste o restaurant_id, o nome, a localidade e gastronomia dos restaurantes cujo nome 
+// começam por "Wil". 
+db.restaurants.find({nome: /^Wil/}, {_id: 0, restaurant_id: 1, nome: 1, localidade: 1, gastronomia: 1})
+// {
+//   _id: ObjectId("65154405bcf8bb27b134a12c"),
+//   localidade: 'Brooklyn',
+//   gastronomia: 'Delicatessen',
+//   nome: "Wilken'S Fine Food"
+// },
+// 3 resultados semelhantes
+
+
+// 11. Liste o nome, a localidade e a gastronomia dos restaurantes que pertencem ao Bronx 
+// e cuja gastronomia é do tipo "American" ou "Chinese". 
+db.restaurants.find({nome: { $ne: "Bronx"}, $or: [ {gastronomia: "American"}, {gastronomia: "Chinese"}  ]}, {_id: 0, nome: 1, localidade: 1, gastronomia: 1})
+// {
+//   localidade: 'Brooklyn',
+//   gastronomia: 'Chinese',
+//   nome: 'Golden Pavillion'
+// }
+// 1370 resultados semelhantes
+
+
+// 12. Liste o restaurant_id, o nome, a localidade e a gastronomia dos restaurantes 
+// localizados em "Staten Island", "Queens",  ou "Brooklyn". 
+db.restaurants.find({$or: [ {localidade: "Staten Island"}, {localidade: "Queens"}, {localidade: "Brooklyn"}  ]}, {_id: 0, restaurant_id: 1, nome: 1, localidade: 1, gastronomia: 1})
+// {
+//   localidade: 'Brooklyn',
+//   gastronomia: 'Donuts',
+//   nome: "Dunkin' Donuts",
+//   restaurant_id: '40363098'
+// }
+// 1580 resultados semelhantes
+
+
+// 13. Liste o nome, a localidade, o score e gastronomia dos restaurantes que alcançaram 
+// sempre pontuações inferiores ou igual a 3. 
+db.restaurants.find( { "grades.score": {$not: { $gt: 3}}}, { _id: 0, nome: 1, localidade: 1, "grades.score": 1, gastronomia: 1} )
+// {
+//   localidade: 'Brooklyn',
+//   gastronomia: 'American',
+//   grades: [ { score: 3 } ],
+//   nome: 'Stand // 210'
+// }
+// 7 elementos semelhantes
+
+
+// 14. Liste o nome e as avaliações dos restaurantes que obtiveram uma avaliação com 
+// um grade "A", um score 10 na data "2014-08-11T00: 00: 00Z" (ISODATE).  
+db.restaurants.find({ "grades": {$elemMatch: {"grade": "A", "score": 10, "date": ISODate("2014-08-11T00:00:00Z")}}}, {_id: 0, nome: 1, "grades.grade": 1, "grades.score": 2})
+// {
+//   grades: [ { grade: 'A' }, { grade: 'A' }, { grade: 'A' }, { grade: 'A' } ],
+//   nome: 'Taste The Tropics Ice Cream'
+// }
+// 3759 resultados semelhantes
+
+
+// 15. Liste o restaurant_id, o nome e os score dos restaurantes nos quais a segunda 
+// avaliação foi grade "A" e ocorreu em ISODATE "2014-08-11T00: 00: 00Z". 
+db.restaurants.find({$and: [ { "grades.grade": "A"}, {"grades.date": ISODate("2014-08-11T00:00:00Z")}] }, {_id: 0, restaurant_id: 1, nome: 1, "grades.score": 1})
+// {
+//   grades: [
+//     { score: 20 },
+//     { score: 20 },
+//     { score: 12 },
+//     { score: 13 },
+//     { score: 12 },
+//     { score: 9 }
+//   ],
+//   nome: 'Cafe Angelique',
+//   restaurant_id: '40875888'
+// }
+// 22 resultados semelhantes
+
+
+// 16. Liste o restaurant_id, o nome, o endereço (address) e as coordenadas geográficas 
+// (coord) dos restaurantes onde o 2º elemento da matriz de coordenadas tem um 
+// valor superior a 42 e inferior ou igual a 52. 
+db.restaurants.find({ "address.coord.1": { $gt: 42, $lte: 52 } }, {_id:0, nome: 1, address:1} )
+// {
+//   address: {
+//     building: '60',
+//     coord: [ -111.9975205, 42.0970258 ],
+//     rua: 'West Side Highway',
+//     zipcode: '10006'
+//   },
+//   nome: 'Sports Center At Chelsea Piers (Sushi Bar)'
+// }
+// 7 resultados semelhantes
+
+
+// 17. Liste nome, gastronomia e localidade de todos os restaurantes ordenando por ordem 
+// crescente da gastronomia e, em segundo, por ordem decrescente de localidade. 
+db.restaurants.find({}, {_id:0, nome: 1, gastronomia: 1, localidade:1} ).sort({gastronomia: 1}, {localidade: -1})
+// {
+//     localidade: 'Brooklyn',
+//     gastronomia: 'American',
+//     nome: 'The Movable Feast'
+// }
+// 3772 resultados semelhantes
+
+
+// 18. Liste nome, localidade, grade e gastronomia de todos os restaurantes localizados em 
+// Brooklyn que não incluem gastronomia "American" e obtiveram uma classificação 
+// (grade) "A". Deve apresentá-los por ordem decrescente de gastronomia. 
+db.restaurants.find( {$and: [ { localidade: "Brooklyn"}, {gastronomia: {$ne: "American"}}, {"grades.grade": "A"}]}, {_id:0, nome: 1, localidade:1, "grades.grade": 1, gastronomia: 1} ).sort({gastronomia: 1}, {localidade: -1}).sort({gastronomia: -1})
+// {
+//     localidade: 'Brooklyn',
+//     gastronomia: 'Spanish',
+//     grades: [ { grade: 'A' }, { grade: 'A' }, { grade: 'A' }, { grade: 'A' } ],
+//     nome: 'M. Restaurant'
+// }
+// 493 resultados semelhantes
+
+
+// 19. Indique o número total de avaliações (numGrades) na coleção.  
+db.restaurants.aggregate([ { $project: { _id: 0, numGrades: { $size: "$grades.grade" } } }, { $group: { _id: "soma", NumGrades: { $sum: "$numGrades" } } }] )
+// [ { _id: 'soma', NumGrades: 18142 } ]
+
+
+// 20. Apresente o nome e número de avaliações (numGrades) dos 3 restaurante com 
+// mais avaliações. 
+db.restaurants.aggregate([ { $project: { nome: 1, numGrades: { $size: "$grades" } } }, { $sort: { numGrades: -1 } }, { $limit: 3 }] )
+// [
+//     {
+//       _id: ObjectId("65154405bcf8bb27b134a238"),
+//       nome: 'Bronx Grill',
+//       numGrades: 8
+//     },
+//     {
+//       _id: ObjectId("65154405bcf8bb27b134a226"),
+//       nome: 'Blue Bay Restaurant',
+//       numGrades: 8
+//     },
+//     {
+//       _id: ObjectId("65154405bcf8bb27b134a147"),
+//       nome: 'Ho Mei Restaurant',
+//       numGrades: 8
+//     }
+//  ]
+
+
+// 21. Apresente o número total de avaliações (numGrades) em cada dia da semana.
+db.restaurants.aggregate([{ $unwind: "$grades" },{ $project: { diaSemana: {$dayOfWeek: "$grades.date"}}}, {$group:{ _id: "$diaSemana", totalNumGrades: { $sum: 1 } }},{ $sort: { _id: 1 } }])
+//[
+//  { _id: 1, totalNumGrades: 7 },
+//  { _id: 2, totalNumGrades: 3186 },
+//  { _id: 3, totalNumGrades: 3878 },
+//  { _id: 4, totalNumGrades: 4118 },
+//  { _id: 5, totalNumGrades: 3984 },
+//  { _id: 6, totalNumGrades: 2440 },
+//  { _id: 7, totalNumGrades: 529 }
+//]
+
+
+// 22. Conte o total de restaurante existentes em cada localidade. 
+db.restaurants.aggregate([ { $group: { _id: "$localidade", totalRestaurantes: { $sum: 1 } } }] )
+// [
+//     { _id: 'Queens', totalRestaurantes: 738 },
+//     { _id: 'Brooklyn', totalRestaurantes: 684 },
+//     { _id: 'Bronx', totalRestaurantes: 309 },
+//     { _id: 'Manhattan', totalRestaurantes: 1883 },
+//     { _id: 'Staten Island', totalRestaurantes: 158 }
+// ]
+
+
+// 23. Indique os restaurantes que têm gastronomia "Portuguese", o somatório de score é 
+// superior a 50 e estão numa latitude inferior a -60. 
+db.restaurants.aggregate([ { $match: { "gastronomia": "Portuguese" } }, { $unwind: "$grades" }, { $group: { _id: "$restaurant_id", soma: { $sum: "$grades.score" }, coord: { $first: "$address.coord" } } }, { $match: { "soma": { $gt: 50.0 }, "coord.0": { $lt: -60 } } }] )
+// [
+//     { _id: '40535455', soma: 80, coord: [ -74.0093371, 40.7258846 ] },
+//     { _id: '40394518', soma: 67, coord: [ -73.732315, 40.720725 ] }
+// ]
+
+
+// 24. Apresente o número de gastronomias diferentes na rua "Fifth Avenue" 
+db.restaurants.aggregate([ { $match: { "address.rua": "Fifth Avenue" } }, { $group: { _id: "$gastronomia" } }, { $group: { _id: "soma", count: { $sum: 1 } } }] )
+// [ { _id: 'soma', count: 4 } ]
+
+
+// 25. Apresente o nome e o score médio (avgScore) e número de avaliações (numGrades) 
+// dos restaurantes com score médio superior a 30 desde 1-Jan-2014. 
+db.restaurants.aggregate([ { $unwind: "$grades" }, { $match: { "grades.date": { $gte: ISODate("2014-01-01") } } }, { $group: { _id: "$restaurant_id", nome: { $first: "$nome" }, avgScore: { $avg: "$grades.score" }, numGrades: { $sum: 1 } } }, { $match: { avgScore: { $gt: 30 } } }] )
+// {
+//     _id: '40392721',
+//     nome: 'Nueva Villa China Restaurant',
+//     avgScore: 33,
+//     numGrades: 2
+// }
+// 32 resultados semelhantes
+
+
+// 26. Indique todos os restaurantes que incluem "Ice Cream" na sua gastronomia e cujo o nome não tenha "Ice Cream".
+db.restaurants.aggregate([ { $match: { $and: [ { gastronomia: /Ice Cream/i }, { nome: { $not: /Ice Cream/i } }] } }, { $project: { _id: 0, nome: 1, gastronomia: 1 } }] )
+# {
+#     gastronomia: 'Ice Cream, Gelato, Yogurt, Ices',
+#     nome: "Dylan'S Candybar"
+# }
+# 13 resultados semelhantes
+
+
+// 27. Imprima os scores e nomes de restaurantes cujo apenas tenham sido classificados no score com números pares
+db.restaurants.aggregate([ { $unwind: "$grades" }, { $match: { "grades.score": { $mod: [2, 0] } } }, { $group: { _id: "$nome", scores: { $push: "$grades.score" }} }] )
+# [
+#     { _id: 'Han Gawi', scores: [ 10, 14 ] },
+#     { _id: "Annie Moore'S Restaurant", scores: [ 12, 10 ] },
+#     { _id: 'Giando', scores: [ 18, 10 ] },
+#     { _id: 'Grand Havana Room', scores: [ 12 ] },
+#     { _id: 'Cara Mia', scores: [ 10 ] },
+#     { _id: 'Carom Cafe Billiards', scores: [ 20, 16 ] },
+#     { _id: 'Tio Pepe', scores: [ 12 ] },
+#     { _id: 'Cafe Edison', scores: [ 12 ] },
+#     { _id: "Blockhead'S Burritos", scores: [ 12, 12, 2, 0, 10 ] },
+#     { _id: 'New Parkway Restaurant', scores: [ 12, 10, 10, 12 ] },
+#     { _id: 'Oasis Cafe', scores: [ 10, 10 ] },
+#     { _id: 'The Scratcher Cafe', scores: [ 16 ] },
+#     { _id: 'Piccola Venezia', scores: [ 26, 28, 8, 12 ] },
+#     { _id: 'City College Cafeteria', scores: [ 12, 22 ] },
+#     { _id: 'Lazzaras Pizza Cafe', scores: [ 14, 4 ] },
+#     { _id: 'Le Mirage Cafe', scores: [ 26, 0 ] },
+#     { _id: "Frank'S Pizza", scores: [ 28 ] },
+#     { _id: 'Seville Restaurant', scores: [ 10 ] },
+#     { _id: "Old John'S Luncheonette", scores: [ 6, 6 ] },
+#     { _id: 'Tanjia Hukka Bar', scores: [ 8, 20, 10, 10 ] }
+# ]
+  
+
+// 28. Mostre os restaurantes com score > 9 e grade "A"
+db.restaurants.aggregate([ { $unwind: "$grades" }, { $match: { "grades.grade": "A", "grades.score": { $gt: 9 } } }, { $group: { _id: "$nome", scores: { $push: "$grades.score" }, grades: { $push: "$grades.grade" } } }, { $match: { grades: { $size: 1 } } }] )
+# { _id: 'The Brazen Head', scores: [ 12 ], grades: [ 'A' ] },
+# { _id: 'Subway / Twin Donut', scores: [ 10 ], grades: [ 'A' ] },
+# { _id: 'Restivo Ristorante', scores: [ 11 ], grades: [ 'A' ] },
+# { _id: 'Wild Asia', scores: [ 11 ], grades: [ 'A' ] },
+# { _id: 'Village Den', scores: [ 10 ], grades: [ 'A' ] }
+# 641 resultados semelhantes
+
+// 29. Ordene por zipcode os restaurantes que tenham localidade em Queens e que tenham "Road" no nome da rua.
+db.restaurants.aggregate([ { $match: { "localidade": "Queens", "address.rua": /Road/ } }, { $project: { _id: 0, zipcode: "$address.zipcode", nomeRua: "$address.rua" } }, { $sort: { zipcode: 1 } }] )
+# [
+#     { zipcode: '11374', nomeRua: '63 Road' },
+#     { zipcode: '11374', nomeRua: '63 Road' },
+#     { zipcode: '11374', nomeRua: '63 Road' },
+#     { zipcode: '11375', nomeRua: '70 Road' },
+#     { zipcode: '11375', nomeRua: '70 Road' },
+#     { zipcode: '11375', nomeRua: '70 Road' },
+#     { zipcode: '11378', nomeRua: '56 Road' },
+#     { zipcode: '11378', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11379', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11379', nomeRua: 'Dry Harbor Road' },
+#     { zipcode: '11379', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' },
+#     { zipcode: '11385', nomeRua: 'Fresh Pond Road' }
+# ]
+
+
+// 30. Apresente o nome e o id dos 5 restaurantes com maior id
+db.restaurants.aggregate([ { $sort: { _id: -1} }, { $limit: 5 }, { $project: { _id: 1, nome: 1 } }] )
+# [
+#     {
+#       _id: ObjectId("65154405bcf8bb27b134afe5"),
+#       nome: 'Nb. National Bakery'
+#     },
+#     {
+#       _id: ObjectId("65154405bcf8bb27b134afe4"),
+#       nome: 'Chopstix Restaurant'
+#     },
+#     {
+#       _id: ObjectId("65154405bcf8bb27b134afe3"),
+#       nome: "Andy'S Cafeteria"
+#     },
+#     { _id: ObjectId("65154405bcf8bb27b134afe2"), nome: 'Europa Cafe' },
+#     {
+#       _id: ObjectId("65154405bcf8bb27b134afe1"),
+#       nome: 'La Villita Restaurant'
+#     }
+# ]  

@@ -1,0 +1,77 @@
+## Diferenças sobre o código
+
+Em primeiro lugar, as diferenças sobre o código incidem na inicialização quer do Jedis:
+```
+Jedis jedis = new Jedis();
+```
+Ou do mongodb:
+```
+MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
+MongoDatabase database = mongoClient.getDatabase("cbdex4");
+MongoCollection<Document> existingProducts = database.getCollection("cbd");
+```
+
+No início do programa, verifiquei se o user introduzido pelo output existe.
+Jedis:
+```
+jedis.exists(user);
+```
+Mongodb:
+```
+boolean userExists = existingProducts.find(Filters.eq("_id", user)).first() != null;
+```
+
+Caso o user já exista, percorrer os keys, values.
+Se o tempo estiver dentro do time slot, conta até chegar ao limite de produtos/tempo 
+Se o tempo estiver fora do time slot, não deixa introduzir mais até o intervalo de tempo for reposto
+Jedis:
+```
+Map<String, String> existingProducts = jedis.hgetAll(user);
+```
+Mongodb:
+```
+List<Document> products = existingProducts.find(Filters.eq("_id", user)).first().getList("products", Document.class);
+```
+
+Caso o user ainda não exista, criar um novo Document no caso de Mongodb e fazer hset no caso de Jedis
+Jedis:
+```
+jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
+```
+Mongodb:
+```
+Document newUserDocument = new Document("_id", user).append("products", Arrays.asList(new Document("timestamp", currentTimestamp.getTime()).append("name", product)));
+```
+
+## Diferenças sobre a simplicidade de escrita sobre o código:
+
+Usar jedis neste problema significa uma muito mais valia em termos de simplicidade do código. Isto porque em operações de criação de listas, sets, hash, etc e 
+a verificação se estas existem faz-se de uma maneira um pouco mais trivial e com menos código. 
+Ex:
+Jedis:
+```
+jedis.hset(user, String.valueOf(currentTimestamp.getTime()), product);
+```
+Mongodb:
+```
+existingProducts.updateOne(
+    Filters.eq("_id", user),
+    new Document("$push", new Document("products",
+        new Document("timestamp", currentTimestamp.getTime())
+            .append("name", product)
+            .append("quantity", quantity)
+    ))
+);
+```
+
+## Desempenho - readWriteSpeed.java
+
+MongoDB Write Time: 251 ms
+Jedis (Redis) Write Time: 39 ms
+MongoDB Read Time: 279 ms
+Jedis (Redis) Read Time: 12 ms
+
+## Parecer final
+Desta forma, justifica-se usar redis uma vez que é mais simples de usar e, neste caso, tem um maior poder de processamento devido a alguns fatores:
+-> Redis é uma boa escolha quando se quer aceder a dados de uma base de dados do tipo key-value, como é o caso. Usar MongoDB para base de dados do tipo document.
+-> Outra razão é o uso de Strings normais. Caso se usasse JSON, nesse caso era preferível Mongodb.

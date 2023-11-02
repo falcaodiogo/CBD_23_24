@@ -1,0 +1,44 @@
+Input 'user product': diogo pera 3
+
+**Welcome, diogo!** - 3 units of pera added.
+
+--------------------
+diogo's inventory:
+pera - 3 units
+pera - 3 units
+--------------------
+Input 'user product quantity': 
+ana kiwi 5
+**Welcome, ana!** - 5 units of kiwi added.
+
+--------------------
+ana's inventory:
+kiwi - 5 units
+--------------------
+Input 'user product quantity': 
+ana kiwi 5
+ - 5 units of kiwi added.
+
+--------------------
+ana's inventory:
+kiwi - 5 units
+kiwi - 5 units
+--------------------
+Input 'user product quantity': 
+ana kiki 8
+!!! No more units of type kiki allowed. !!!
+
+--------------------
+ana's inventory:
+kiwi - 5 units
+kiwi - 5 units
+--------------------
+Input 'user product quantity': 
+diogo pera 10
+!!! No more units of type pera allowed. !!!
+
+--------------------
+diogo's inventory:
+pera - 3 units
+pera - 3 units
+--------------------

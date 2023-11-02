@@ -1,0 +1,94 @@
+Input 'user product': Ana ananas**Welcome, Ana!** - ananas added.
+
+--------------------
+Ana's inventary:
+ananas
+--------------------
+Input 'user product': Ana pera - pera added.
+
+--------------------
+Ana's inventary:
+ananas
+pera
+--------------------
+Input 'user product': Diogo pera**Welcome, Diogo!** - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+--------------------
+Input 'user product': Diogo pera - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+--------------------
+Input 'user product': Diogo pera - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+--------------------
+Input 'user product': Diogo pera - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+pera
+--------------------
+Input 'user product': Diogo pera - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+pera
+pera
+--------------------
+Input 'user product': Diogo pera!!! No more product of type pera allowed. !!!
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+pera
+pera
+--------------------
+Input 'user product': Diogo ananas - ananas added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+pera
+pera
+ananas
+--------------------
+Input 'user product': Ana ananas - ananas added.
+
+--------------------
+Ana's inventary:
+ananas
+pera
+ananas
+--------------------
+Input 'user product': Diogo pera - pera added.
+
+--------------------
+Diogo's inventary:
+pera
+pera
+pera
+pera
+pera
+ananas
+pera
+--------------------
