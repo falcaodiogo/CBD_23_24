@@ -427,3 +427,19 @@ SELECT tags FROM gestao_videos;
 --       {'golfinhos', 'mar'}
 
 -- 12
+-- Todos os videos que estão parados (stop)
+CREATE INDEX IF NOT EXISTS "tipo" ON registo_eventos(tipo);
+SELECT * FROM registo_eventos WHERE tipo = 'stop';
+--  id_video | id_autor                             | selo_temporal_registo           | selo_temporal_video             | tipo
+-- ----------+--------------------------------------+---------------------------------+---------------------------------+------
+--        10 | 864103bc-bcfc-4112-bb7c-059dabf4f641 | 2023-12-16 16:16:16.000000+0000 | 2023-12-18 16:16:16.000000+0000 | stop
+--         2 | fc509e6f-0a60-4787-98d3-74fb82b5da20 | 2023-12-16 16:16:16.000000+0000 | 2023-12-18 16:16:16.000000+0000 | stop
+
+-- 13
+-- Procurar por comentários ofensivos
+CREATE INDEX IF NOT EXISTS ON gestao_comentarios (comentario);
+SELECT * FROM gestao_comentarios WHERE comentario = 'Isso ou uma batata servem para o mesmo';
+--  id_autor                             | id_video | comentario                             | selo_temporal_comentario
+-- --------------------------------------+----------+----------------------------------------+---------------------------------
+--  42e7ae6a-0577-4e3c-b4c8-95b62c48fea3 |        4 | Isso ou uma batata servem para o mesmo | 2023-12-16 19:20:12.000000+0000
+
