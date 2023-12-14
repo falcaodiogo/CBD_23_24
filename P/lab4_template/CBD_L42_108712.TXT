@@ -55,7 +55,6 @@ MATCH
 (p1:Person {name: 'John Cusack'}),
 (p2:Person {name: 'Demi Moore'}),
 p = shortestPath((p1)-[*]-(p2))
-WHERE length(p) > 1
 RETURN p
 ![alt text](./exercise2.png)
 
@@ -65,7 +64,6 @@ MATCH
 (p1:Person {name: 'Keanu Reeves'}),
 (p2:Person {name: 'Tom Cruise'}),
 p = shortestPath((p1)-[*]-(p2))
-WHERE length(p) > 1
 RETURN p
 
 5 nós, 4 e relações.
@@ -73,20 +71,83 @@ RETURN p
 
 # 11. Quais são as dimensões do caminho mais curto entre pessoas com nome Jim e pessoas com nome Kevin?
 
+MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
+WHERE p1.name CONTAINS "Jim" AND p2.name CONTAINS "Kevin" AND p1<>p2
+WITH size(nodes(p)) AS path_dimension
+RETURN path_dimension
+ORDER BY path_dimension
+LIMIT 1
+
 # 12. Que pessoas têm uma distância 2 para Jim Cash (a distância entre duas pessoas é o comprimento do caminho mais curto entre eles)?
+
+MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
+WHERE p1.name = "Jim Cash" AND p1<>p2
+WITH size(nodes(p)) AS path_dimension
+WHERE path_dimension = 2
+RETURN path_dimension
+
+<!-- ?????? NÃO DEU NADA  -->
 
 # 13. Qual é a maior distância de uma pessoa para Kevin Bacon?
 
+MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
+WHERE p1.name = "Kevin Bacon" AND p1<>p2
+WITH size(nodes(p)) AS path_dimension
+RETURN path_dimension
+ORDER BY path_dimension DESC
+LIMIT 1
+
 # 14. Qual é a maior distância entre duas pessoas?
+
+MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
+WHERE p1<>p2
+WITH size(nodes(p)) AS path_dimension
+RETURN path_dimension
+ORDER BY path_dimension DESC
+LIMIT 1
 
 # 15. Qual é a distribuição de distâncias em pares (isto é, para a distância 1, 2, 3, ..., quantos pares de pessoas têm essa distância um do outro)?
 
+MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
+WHERE p1<>p2
+WITH size(nodes(p)) AS path_dimension
+RETURN path_dimension, COUNT(*) AS cont
+ORDER BY cont
+
 # 16. Indique as 10 pessoas com menor distância média em que o caminho entre elas são relações do tipo ACTED_IN.
+
+MATCH path = shortestPath((p1:Person)-[:ACTED_IN]-(p2:Person))
+WHERE p1<>p2
+WITH size(nodes(path)) AS path_dimension
+RETURN AVG(path_dimension) as y
+ORDER BY y DESC
+LIMIT 10
 
 # 17. Apresente os atores que tiveram pelo menos uma role para personagens com o prefixo 'Dr.'. O resultado deve ser uma lista com o par “Ator, Lista das roles”.
 
-# 18.
+MATCH (p1:Person)-[m:ACTED_IN]-()
+WHERE any(word IN m.roles WHERE word STARTS WITH "Dr.")
+RETURN collect(p1.name), collect(m.roles)
 
-# 19.
+<!-- fazer mais tarde -->
 
-# 20.
+# 18. What are the roles Tom Cruise has ever acted in?
+
+MATCH (p1:Person)-[m:ACTED_IN]-()
+WHERE p1.name = "Tom Hanks"
+RETURN p1.name, collect(m.roles)
+
+# 19. Show the average number of actors who directed the movie itself.
+
+MATCH (director:Person)-[:DIRECTED]->(movie:Movie)<-[:ACTED_IN]-(actor:Person)
+WHERE (director)-[:ACTED_IN]->(movie)
+RETURN count(director)/count(actor)
+
+# 20. Show EVERY possible path for connecting the actors who directed the own movie.
+
+MATCH p = shortestPath((p1:Person)-[:REVIEWED]->())
+WITH size(nodes(p)) AS path_dimension
+RETURN path_dimension
+ORDER BY path_dimension DESC
+
+# <!-- review 20, 17, 12 -->
