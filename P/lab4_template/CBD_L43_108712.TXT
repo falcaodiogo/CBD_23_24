@@ -39,6 +39,11 @@ WHERE m.role_on_project = "Committer"
 RETURN pr.name, COUNT(p) as number_people
 
 # 8. Liste todos os utilizadores que participaram nos mesmo projetos do que o utilizador "atm" (id). Mostre os atributos: nome de "atm", nome utilizador 2, nome do projeto.
-
+MATCH(pr:Project)-[m:WORKED_ON]-(p:Person)-[m2:WORKED_ON]-(pr2:Project)
+WHERE p.svn_id = "atm"
+RETURN p.name, pr2.name
 
 # 9. Liste todos os utilizadores que participaram com a role "Committer" em projetos em que o utilizador "atm" (id1) participou com a role "PMC".
+MATCH(pr:Project)-[m:WORKED_ON]-(p:Person)-[m2:WORKED_ON]-(pr2:Project)
+WHERE p.svn_id = "atm" AND m.role_on_project = "Committer" AND m2.role_on_project = "PMC"
+RETURN p.name, pr2.name

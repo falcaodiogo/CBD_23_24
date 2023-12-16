@@ -1,0 +1,2 @@
+LOAD CSV WITH HEADERS FROM 'file:///resources/cars/norway_new_car_sales_by_model.csv' AS csvLine
+MERGE (y:Year {}
