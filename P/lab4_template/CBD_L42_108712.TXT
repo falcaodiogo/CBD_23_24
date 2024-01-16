@@ -73,7 +73,7 @@ RETURN p
 
 MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
 WHERE p1.name CONTAINS "Jim" AND p2.name CONTAINS "Kevin" AND p1<>p2
-WITH size(nodes(p)) AS path_dimension
+WITH length(p) AS path_dimension
 RETURN path_dimension
 ORDER BY path_dimension
 LIMIT 1
@@ -82,7 +82,7 @@ LIMIT 1
 
 MATCH p = shortestPath((p1:Person)-[*]-(p2:Person))
 WHERE p1.name = "Jim Cash" AND p1<>p2
-WITH size(nodes(p)) AS path_dimension
+WITH length(p) AS path_dimension
 WHERE path_dimension = 2
 RETURN path_dimension
 
@@ -129,7 +129,6 @@ MATCH (p1:Person)-[m:ACTED_IN]-()
 WHERE any(word IN m.roles WHERE word STARTS WITH "Dr.")
 RETURN collect(p1.name), collect(m.roles)
 
-<!-- fazer mais tarde -->
 
 # 18. What are the roles Tom Cruise has ever acted in?
 
